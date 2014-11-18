@@ -4,7 +4,7 @@
     define your module and controllers here
 */
 
-var tasksUrl = 'https://api.parse.com/1/classes/tasks';
+var ratingsUrl = 'https://api.parse.com/1/classes/ratings';
 
 angular.module('RatingApp', [])
     .config(function($httpProvider) {
@@ -17,3 +17,11 @@ angular.module('RatingApp', [])
         $httpProvider.defaults.headers.common['X-Parse-Application-Id'] = 'Eaxfl95zoQfv8deM8rkfIlHOOiOcZ4sABVfzUDpA';
         $httpProvider.defaults.headers.common['X-Parse-REST-API-Key'] = 'hRRs7VK5ZsHR4lHAQZdG43D2d0fpLo7Oqe08JK17';
     })
+
+    .controller('RatingsController', function($scope, $http) {
+
+
+
+
+
+    });
