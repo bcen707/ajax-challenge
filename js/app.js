@@ -19,9 +19,9 @@ angular.module('RatingApp', [])
     })
 
     .controller('RatingsController', function($scope, $http) {
+        $scope.max = 5; //
 
 
 
 
-
-    });
+    }); // controller
