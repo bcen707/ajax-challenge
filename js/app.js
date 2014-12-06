@@ -6,7 +6,7 @@
 
 var ratingsUrl = 'https://api.parse.com/1/classes/ratings';
 
-angular.module('RatingApp', [])
+angular.module('RatingApp', ['ui.bootstrap'])
     .config(function($httpProvider) {
         //Parse required two extra headers sent with every HTTP request: X-Parse-Application-Id, X-Parse-REST-API-Key
         //the first needs to be set to your application's ID value
@@ -18,10 +18,33 @@ angular.module('RatingApp', [])
         $httpProvider.defaults.headers.common['X-Parse-REST-API-Key'] = 'hRRs7VK5ZsHR4lHAQZdG43D2d0fpLo7Oqe08JK17';
     })
 
-    .controller('RatingsController', function($scope, $http) {
+    .controller('reviewController', function($scope, $http) {
         $scope.max = 5; //
+        $scope.hoveringOver = function(value) {
+          $scope.overStar = value;
+        };
+    
+     
+        $scope.refreshComment = function() {
+            $scope.loading = true;
+            $http.get(ratingsUrl + '?where={"done" : false}')
+                .success(function(responseData) {
+                    $scope.comments = responseData.results;
+                    console.log($scope.comments);
+                })
 
+                .error(function(err) {
+                    console.log(err);
+                    //notify the user in some way
+                })
 
+                .finally(function() {
+                    $scope.loading = false;
+                });
+        }; // refresh comments
+    
+        // call to get initial tasks on page load
+        $scope.refreshComment();
+    
 
-
-    }); // controller
+      
