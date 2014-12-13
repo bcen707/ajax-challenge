@@ -9,7 +9,7 @@
     </head>
     <body>
 
-        <main class="container">
+        <main class="container" ng-app="review" ng-controller="reviewController">
             <section>
                 <img src="img/super-bass-o-matic-76.jpg" alt="product picture" class="product-picture">
                 <h1>The Super Bass-o-Matic '76</h1>
@@ -17,7 +17,7 @@
             </section>
 
             <section>
-                <h2>Add a Comment</h2>
+                <h2><br>Add a Comment</h2>
                 <!--  
                 put a form here for entering a new comment
                 the user must select a rating, and enter a name, title, and comment body
@@ -26,33 +26,37 @@
                 http://angular-ui.github.io/bootstrap/#/rating
                 their script file is included below
                 -->
-
                 <form class="simple-form" ng-submit="createComment()" id="comment-form" method="POST" role="form">
                     <div class="rating">
                        <p>How would you rate this product?</p>
-                        <rating ng-model="newComment.rating" readOnly="isReadOnly" max="max" on-hover="hoveringOver(value)"></rating>
+                        <rating ng-click="hasRating()" ng-model="newComment.rating" readOnly="isReadOnly" 
+                                                                    max="max" on-hover="hoveringOver(value)"></rating>
                     </div> 
                     
                    <div class="form-group name">
-                        <input ng-model="newComment.name" class="form-control" type="text" placeholder="Enter name here..." required>
+                        <input ng-model="newComment.name" class="form-control" 
+                                                                type="text" placeholder="Enter name here..." required>
                     </div>
 
                     <div class="form-group title">
-                        <input ng-model="newComment.title" class="form-control" type="text" placeholder="Enter a title for your comment..." required>
+                        <input ng-model="newComment.title" class="form-control" 
+                                                    type="text" placeholder="Enter a title for your comment..." required>
                     </div>
                     
                     <div class="form-group body">
-                        <textarea ng-model="newComment.body" class="form-control" type="text" placeholder="Write your comment here!" required>
+                        <textarea ng-model="newComment.body" class="form-control" 
+                                                            type="text" placeholder="Write your comment here!" required>
                         </textarea>
                     </div>
                     
                     <div class="form-group btn-group">
-                        <button id="submit" type="submit" class="btn btn-primary">Submit my comment!</button>
+                        <button id="submit-btn" type="submit" class="btn btn-primary">Submit My Comment</button>
                     </div>
-                    
                 </form>
             </section>
+            
 
+            
             <section>
                 <h2>Comments</h2>
                 <!-- 
@@ -60,18 +64,21 @@
                 each comment should also have UI allowing the user to vote up/down the comment
                 as well as delete it
                  -->
+                 
                 <section ng-model="score">
-                    <img ng-if="loading" id="loading-gif" src="img/ajax-spinner.gif" alt="loading spinner" />
+                    <img ng-if="loading" id="load-gif" src="img/ajax-spinner.gif" alt="loading spinner" />
                     <p ng-if="comments.length == 0">No comments yet. Be the first to review this!</p>
                     <div ng-repeat="comment in comments | orderBy: '-score'">
                         <rating ng-model="comment.rating" readonly="!comment.done"></rating>
-                        <h3>{{comment.title}}: A Review by {{comment.name}}</h3>
+                        <h3>{{comment.title}}</h3>
+                        <p> A Review by {{comment.name}}</p>
                         <p>{{comment.body}}</p>
                         <div>
                             {{comment.score || 0}}
-                            <span class="glyphicon glyphicon-thumbs-up" ng-click="incrementVotes(comment,1)"></span>
-                            <span class="glyphicon glyphicon-thumbs-down" ng-click="incrementVotes(comment,-1)"></span>
-                            <button id="delete" ng-click="deleteComment(comment)" class="btn btn-danger">Delete this comment</button>
+                            <span class="glyphicon glyphicon-thumbs-up" ng-click="incrementVotes(comment, 1)"></span>
+                            <span class="glyphicon glyphicon-thumbs-down" ng-click="incrementVotes(comment, 1)"></span>
+                            <button id="delete" ng-click="deleteComment(comment)" 
+                                                                    class="btn btn-danger">Delete This Comment</button>
                         </div>
                      </div>
                  </section>

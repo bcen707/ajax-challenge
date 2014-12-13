@@ -4,7 +4,8 @@
     define your module and controllers here
 */
 
-var ratingsUrl = 'https://api.parse.com/1/classes/ratings';
+var ratingsUrl = 'https://api.parse.com/1/classes/comments';
+var hasRating = false;
 
 angular.module('RatingApp', ['ui.bootstrap'])
     .config(function($httpProvider) {
@@ -19,7 +20,7 @@ angular.module('RatingApp', ['ui.bootstrap'])
     })
 
     .controller('reviewController', function($scope, $http) {
-        $scope.max = 5; //
+        $scope.max = 5; 
         $scope.hoveringOver = function(value) {
           $scope.overStar = value;
         };
@@ -41,10 +42,75 @@ angular.module('RatingApp', ['ui.bootstrap'])
                 .finally(function() {
                     $scope.loading = false;
                 });
-        }; // refresh comments
+        }; // refreshComment
     
         // call to get initial tasks on page load
         $scope.refreshComment();
     
 
-      
+
+
+
+
+
+
+      $scope.newComment = {done : false};
+    
+        $scope.createComment = function() {
+            if (hasRating) {
+                $scope.inserting = true;
+                $http.post(ratingsUrl, $scope.newComment) 
+                    .success(function(responseData) {
+                        $scope.newComment.objectId = responseData.objectId;
+                        $scope.comments.push($scope.newComment);
+                        $scope.newComment = {done: false};
+                        $scope.newComment.score = 0;
+                    })
+                    .finally(function() {
+                        $scope.inserting = false;
+                        hasRating = false;
+                });
+            } else {
+                // comment will not post
+            }
+        }; // createComment
+
+    
+        $scope.deleteComment = function(comment) {
+            comment.done = true;
+            $http.delete(ratingsUrl + '/' + comment.objectId);
+            var timeoutCode;
+            var delayMs = 1000;
+            timeoutCode = setTimeout(function() {
+                $scope.refreshComment();
+            }, delayMs);
+        }; //deleteComment
+
+        $scope.incrementVotes = function(comment, amount) {
+                var postData = {
+                    score: {
+                        __op: "Increment",
+                        amount: amount
+                    }
+                };
+                
+                $scope.updating = false;
+                $http.put(ratingsUrl + '/' + comment.objectId, postData)
+                    .success(function(responseData) {
+                        comment.score = responseData.score;
+                    })
+                    .error(function(err) {
+                        console.log(err);
+                    })
+                    .finally(function() {
+                        $scope.updating = false;
+                    });
+                
+            }; //incrementVotes
+
+           
+        $scope.hasRating = function() {
+            hasRating = true;
+        }
+}); // end controller
+
