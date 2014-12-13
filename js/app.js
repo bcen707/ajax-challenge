@@ -5,7 +5,7 @@
 */
 
 var ratingsUrl = 'https://api.parse.com/1/classes/comments';
-var hasRating = false;
+var checkRating = false;
 
 angular.module('RatingApp', ['ui.bootstrap'])
     .config(function($httpProvider) {
@@ -48,16 +48,10 @@ angular.module('RatingApp', ['ui.bootstrap'])
         $scope.refreshComment();
     
 
-
-
-
-
-
-
-      $scope.newComment = {done : false};
+        $scope.newComment = {done : false};
     
         $scope.createComment = function() {
-            if (hasRating) {
+            if (checkRating) {
                 $scope.inserting = true;
                 $http.post(ratingsUrl, $scope.newComment) 
                     .success(function(responseData) {
@@ -68,20 +62,18 @@ angular.module('RatingApp', ['ui.bootstrap'])
                     })
                     .finally(function() {
                         $scope.inserting = false;
-                        hasRating = false;
+                        checkRating = false;
                 });
-            } else {
-                // comment will not post
-            }
+            }   // else comment will not post
         }; // createComment
 
     
         $scope.deleteComment = function(comment) {
             comment.done = true;
             $http.delete(ratingsUrl + '/' + comment.objectId);
-            var timeoutCode;
+            var timeout;
             var delayMs = 1000;
-            timeoutCode = setTimeout(function() {
+            timeout = setTimeout(function() {
                 $scope.refreshComment();
             }, delayMs);
         }; //deleteComment
@@ -110,7 +102,7 @@ angular.module('RatingApp', ['ui.bootstrap'])
 
            
         $scope.hasRating = function() {
-            hasRating = true;
+            checkRating = true;
         }
 }); // end controller
 
